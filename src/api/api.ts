@@ -3,7 +3,7 @@ import {storage} from "./storage";
 
 export const authAPI = {
     async login(loginData: LoginDataType): Promise<any> {
-        return await fetch('api/auth/user',
+        return fetch('https://tager.dev.ozitag.com/api/auth/user',
             {
                 method: 'POST',
                 headers: {
@@ -16,7 +16,7 @@ export const authAPI = {
     },
     async getUserInfo(): Promise<any> {
         let token = await storage.getToken()
-        return await fetch('/api/tager/user/profile',
+        return fetch('/api/tager/user/profile',
             {
                 method: 'GET',
                 headers: {
@@ -27,7 +27,7 @@ export const authAPI = {
         )
     }, async logout(Token: string): Promise<any> {
         let token = await storage.getToken()
-        return await fetch('/api/tager/user/profile/logout',
+        return fetch('/api/tager/user/profile/logout',
             {
                 method: 'POST',
                 headers: {
