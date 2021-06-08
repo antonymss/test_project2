@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {loginTC} from "./auth-reducer";
 import {Redirect} from "react-router-dom";
 import {AppRootStateType} from "../api/store";
-import { Button, TextField } from "@material-ui/core";
-
+import {Button, TextField} from "@material-ui/core";
 
 
 export const Login = () => {
@@ -27,8 +26,6 @@ export const Login = () => {
             }
         },
         initialValues: {
-            // email: 'user@ozitag.com',
-            // password: 'user'
             email: '',
             password: ''
         },
@@ -54,7 +51,7 @@ export const Login = () => {
                     variant="outlined"
                     {...formik.getFieldProps("email")}
                 />
-            {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null}
+                {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null}
                 <TextField
                     type="password"
                     label="Password"
@@ -62,7 +59,7 @@ export const Login = () => {
                     variant="outlined"
                     {...formik.getFieldProps("password")}
                 />
-            {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null}
+                {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null}
                 <Button type={'submit'} variant="contained" color="primary">
                     Login
                 </Button>

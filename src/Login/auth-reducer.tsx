@@ -64,8 +64,9 @@ type ThunkCustomDispatch = Dispatch<ActionsType>
 export const loginTC = (loginData: LoginDataType) => async (dispatch: Dispatch<any>) => {
     try {
         const res = await authAPI.login(loginData)
-        await storage.saveToken(res.data.data.accessToken)
-        dispatch(setAuthTokeAC(res.data.data.accessToken))
+        const data = await res.json()
+        await storage.saveToken(data.data.accessToken)
+        dispatch(setAuthTokeAC(data.data.accessToken))
         dispatch(getProfileTC())
     } catch (error) {
         debugger
@@ -74,7 +75,8 @@ export const loginTC = (loginData: LoginDataType) => async (dispatch: Dispatch<a
 export const getProfileTC = () => async (dispatch: ThunkCustomDispatch) => {
     try {
         const response = await authAPI.getUserInfo()
-        dispatch(getUserInfoAC(response.data.data.email, response.data.data.name, true))
+        const data = await response.json()
+        dispatch(getUserInfoAC(data.data.email, data.data.name, true))
     } catch (error) {
         alert('cant get profile')
     }
@@ -85,11 +87,12 @@ export const logoutTC = (): ThunkAction<void, AppRootStateType, unknown, Actions
     if (token) {
         // endpoint from documentation is not available  404
         try {
+
             await authAPI.logout(token)
             dispatch(logoutAC(false))
         } catch (error) {
-            storage.clearToken()
-            dispatch(logoutAC(false))
+            // storage.clearToken()
+            // dispatch(logoutAC(false))
 
         }
     }
