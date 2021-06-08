@@ -87,7 +87,7 @@ export const logoutTC = (): ThunkAction<void, AppRootStateType, unknown, Actions
     if (token) {
         // endpoint from documentation is not available  404
         try {
-debugger
+
             await authAPI.logout(token)
             dispatch(logoutAC(false))
         } catch (error) {

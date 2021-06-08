@@ -3,7 +3,7 @@ import {storage} from "./storage";
 
 export const authAPI = {
     async login(loginData: LoginDataType): Promise<any> {
-        return fetch('https://tager.dev.ozitag.com/api/auth/user',
+        return fetch('api/auth/user',
             {
                 method: 'POST',
                 headers: {
