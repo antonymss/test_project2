@@ -1,4 +1,19 @@
 import axios from "axios";
+import { storage } from "./storage";
+
+const instance  = axios.create()
+
+instance.interceptors.request.use(async function (config) {
+
+    let token = await storage.getToken();
+    config.headers.Authorization = 'Bearer ' + token
+
+    // Do something before request is sent
+    return config;
+}, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+});
 
 export const authAPI = {
     // async login(loginData: LoginDataType) {
@@ -27,7 +42,7 @@ export const authAPI = {
     // },
     async login(loginData: LoginDataType) {
         // let response = await axios.post('api/auth/user',
-        return axios.post('api/auth/user',
+        return await instance .post('api/auth/user',
             {
                 "clientId": 1,
                 "email": "user@ozitag.com",
@@ -35,23 +50,14 @@ export const authAPI = {
             }
         )
     },
-    async getUserInfo(token: string) {
-        return axios.get('/api/tager/user/profile',
-            {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            }
+    async getUserInfo() {
+        return await instance .get('/api/tager/user/profile'
         )
     },
     async logout(token: string) {
-        return axios.post('/api/tager/user/profile/logout',
-            {},
-            {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            }
+        return await instance .post('/api/tager/user/profile/logout'
+
+
         )
     },
     // .then(function (response) {
@@ -97,5 +103,4 @@ export const authAPI = {
 export type LoginDataType = {
     email: string
     password: string
-    rememberMe: boolean
 }
