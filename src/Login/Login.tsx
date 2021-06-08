@@ -5,6 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {loginTC} from "./auth-reducer";
 import {Redirect} from "react-router-dom";
 import {AppRootStateType} from "../api/store";
+import { Button, TextField } from "@material-ui/core";
+
 
 
 export const Login = () => {
@@ -25,9 +27,10 @@ export const Login = () => {
             }
         },
         initialValues: {
-            email: 'user@ozitag.com',
-            password: 'user',
-            rememberMe: false
+            // email: 'user@ozitag.com',
+            // password: 'user'
+            email: '',
+            password: ''
         },
 
         onSubmit: values => {
@@ -44,18 +47,25 @@ export const Login = () => {
 
         <form onSubmit={formik.handleSubmit}>
             <div className={style.login}>
-            <label>Email</label>
-            <input type="email" {...formik.getFieldProps("email")}/>
+                <TextField
+                    type="email"
+                    label="Email"
+                    margin="normal"
+                    variant="outlined"
+                    {...formik.getFieldProps("email")}
+                />
             {formik.errors.email ? <div className={style.error}>{formik.errors.email}</div> : null}
-
-            <label>Password</label>
-            <input type="password" {...formik.getFieldProps("password")}/>
+                <TextField
+                    type="password"
+                    label="Password"
+                    margin="normal"
+                    variant="outlined"
+                    {...formik.getFieldProps("password")}
+                />
             {formik.errors.password ? <div className={style.error}>{formik.errors.password}</div> : null}
-
-            {/*<label>Remember Me<input type="checkbox" {...formik.getFieldProps("rememberMe")}*/}
-            {/*                         checked={formik.values.rememberMe}/></label>*/}
-
-            <button type={'submit'} color={'primary'}>Login</button>
+                <Button type={'submit'} variant="contained" color="primary">
+                    Login
+                </Button>
             </div>
         </form>
     </div>
