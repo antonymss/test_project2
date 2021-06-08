@@ -1,7 +1,8 @@
 import React, {Dispatch} from "react";
-import { ThunkAction } from "redux-thunk";
+import {ThunkAction} from "redux-thunk";
 import {authAPI, LoginDataType} from "../api/api";
-import { AppRootStateType } from "../api/store";
+import {storage} from "../api/storage";
+import {AppRootStateType} from "../api/store";
 
 const initialState = {
     isLoggedIn: false,
@@ -30,8 +31,8 @@ export const authReducer = (state: InitialAuthStateType = initialState, action: 
 
             }
         }
-        case "AUTH/LOG-OUT ":{
-            return{
+        case "AUTH/LOG-OUT ": {
+            return {
                 ...state, isLoggedIn: action.isLoggedIn,
             }
         }
@@ -50,9 +51,9 @@ export const getUserInfoAC = (email: string, name: string, isLoggedIn: boolean) 
     payload: {email, name, isLoggedIn}
 } as const)
 
-export const logoutAC = ( isLoggedIn: boolean)=>({
+export const logoutAC = (isLoggedIn: boolean) => ({
     type: 'AUTH/LOG-OUT ', isLoggedIn
-}as const)
+} as const)
 
 export type ActionsType = ReturnType<typeof logoutAC>
     | ReturnType<typeof getUserInfoAC>
@@ -60,35 +61,37 @@ export type ActionsType = ReturnType<typeof logoutAC>
 type ThunkCustomDispatch = Dispatch<ActionsType>
 
 
-export const loginTC = (loginData: LoginDataType) => (dispatch: ThunkCustomDispatch) => {
-    authAPI.login(loginData)
-        .then((res) => {
-
-            dispatch(setAuthTokeAC(res.data.data.accessToken))
-            authAPI.getUserInfo(res.data.data.accessToken)
-                .then(response => {
-                    dispatch(getUserInfoAC(response.data.data.email, response.data.data.name, true))
-                })
-        })
-        .catch(error => {
-            debugger
-        })
+export const loginTC = (loginData: LoginDataType) => async (dispatch: Dispatch<any>) => {
+    try {
+        const res = await authAPI.login(loginData)
+        await storage.saveToken(res.data.data.accessToken)
+        dispatch(setAuthTokeAC(res.data.data.accessToken))
+        dispatch(getProfileTC())
+    } catch (error) {
+        debugger
+    }
 }
-export const logoutTC = (): ThunkAction<void, AppRootStateType, unknown, ActionsType> => (dispatch: ThunkCustomDispatch, getState ) => {
+export const getProfileTC = () => async (dispatch: ThunkCustomDispatch) => {
+    try {
+        const response = await authAPI.getUserInfo()
+        dispatch(getUserInfoAC(response.data.data.email, response.data.data.name, true))
+    } catch (error) {
+        alert('cant get profile')
+    }
+}
+export const logoutTC = (): ThunkAction<void, AppRootStateType, unknown, ActionsType> => async (dispatch: ThunkCustomDispatch, getState) => {
     let token = getState().auth.accessToken;
-    // let data = {
-    //     email: getState().auth.email,
-    //     clientId: '1',
-    //     password: getState().auth.password
-    // }
-    if(token){
-        authAPI.logout(token)
-            .then((res)=>{
-                debugger
-                dispatch(logoutAC( false))
-            }).catch(error=>{
-                debugger
-        })
+
+    if (token) {
+        // endpoint from documentation is not available  404
+        try {
+            await authAPI.logout(token)
+            dispatch(logoutAC(false))
+        } catch (error) {
+            storage.clearToken()
+            dispatch(logoutAC(false))
+
+        }
     }
 }
 
