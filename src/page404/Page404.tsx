@@ -5,13 +5,13 @@ import shadow from "../assets/image/shadow.png";
 import {useHistory} from "react-router-dom";
 
 export const Page404 = () => {
-    // const history = useHistory()
+    const history = useHistory()
 
     return (
         <div className={style.page404}>
-            {/*<h3 className={style.goBack}>*/}
-            {/*    /!*<button onClick={() => history.goBack()}>⏴ Back</button>*!/*/}
-            {/*</h3>*/}
+            <h3 className={style.goBack}>
+                <button onClick={() => history.goBack()}>⏴ Back</button>
+            </h3>
             <div className={style.bigError}>error</div>
             <div className={style.ghostContainer}>
                 <div className={style.ghostWithShadow}>
