@@ -26,8 +26,8 @@ export const Login = () => {
             }
         },
         initialValues: {
-            email: 'user@ozitag.com',
-            password: 'user'
+            email: '',
+            password: ''
         },
 
         onSubmit: values => {
